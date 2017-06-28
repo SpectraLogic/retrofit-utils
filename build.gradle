@@ -1,0 +1,5 @@
+dependencies {
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile group: 'com.squareup.retrofit2', name: 'converter-simplexml', version: "$retrofitVersion"
+    compile group: 'com.squareup.retrofit2', name: 'adapter-rxjava2', version: "$retrofitVersion"
+}
