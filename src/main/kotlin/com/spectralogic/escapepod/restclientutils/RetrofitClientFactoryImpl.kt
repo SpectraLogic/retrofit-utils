@@ -16,17 +16,24 @@
 package com.spectralogic.escapepod.restclientutils
 
 import okhttp3.OkHttpClient
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 class RetrofitClientFactoryImpl : RetrofitClientFactory {
-    override fun <T> createRestClient(endpoint: String, service : Class<T>, basePath : String): T {
+    override fun <T> createXmlRestClient(endpoint: String, service : Class<T>, basePath : String)
+            = innerCreateClient(endpoint, service, basePath, SimpleXmlConverterFactory.create())
 
+    override fun <T> createJsonRestClient(endpoint: String, service : Class<T>, basePath : String)
+            = innerCreateClient(endpoint, service, basePath, JacksonConverterFactory.create())
+
+    private fun <T> innerCreateClient(endpoint: String, service: Class<T>, basePath: String, converterFactory: Converter.Factory): T {
         return Retrofit.Builder()
             .baseUrl(endpoint + basePath)
             .client(createOkioClient())
-            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .addConverterFactory(converterFactory)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(service)
