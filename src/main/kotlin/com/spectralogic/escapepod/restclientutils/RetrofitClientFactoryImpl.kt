@@ -21,6 +21,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import java.util.concurrent.TimeUnit
 
 class RetrofitClientFactoryImpl : RetrofitClientFactory {
     override fun <T> createXmlRestClient(endpoint: String, service : Class<T>, basePath : String)
@@ -58,6 +59,10 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
 
             chain.proceed(newRequest)
         }
+
+        builder.connectTimeout(60L, TimeUnit.SECONDS)
+        builder.readTimeout(20L, TimeUnit.SECONDS)
+        builder.writeTimeout(10L, TimeUnit.SECONDS )
 
         return builder.build()
     }
