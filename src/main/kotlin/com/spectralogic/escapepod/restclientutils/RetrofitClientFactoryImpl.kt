@@ -61,8 +61,8 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
         }
 
         builder.connectTimeout(60L, TimeUnit.SECONDS)
-        builder.readTimeout(20L, TimeUnit.SECONDS)
-        builder.writeTimeout(10L, TimeUnit.SECONDS )
+        builder.readTimeout(35L, TimeUnit.SECONDS)
+        builder.writeTimeout(35L, TimeUnit.SECONDS )
 
         return builder.build()
     }
