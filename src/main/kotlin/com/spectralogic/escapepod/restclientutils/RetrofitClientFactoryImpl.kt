@@ -15,6 +15,7 @@
 
 package com.spectralogic.escapepod.restclientutils
 
+import com.spectralogic.escapepod.util.json.Mapper
 import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -28,7 +29,7 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
             = innerCreateClient(endpoint, service, basePath, SimpleXmlConverterFactory.create())
 
     override fun <T> createJsonRestClient(endpoint: String, service : Class<T>, basePath : String)
-            = innerCreateClient(endpoint, service, basePath, JacksonConverterFactory.create())
+            = innerCreateClient(endpoint, service, basePath, JacksonConverterFactory.create(Mapper.mapper))
 
     private fun <T> innerCreateClient(endpoint: String, service: Class<T>, basePath: String, converterFactory: Converter.Factory): T {
         return Retrofit.Builder()
