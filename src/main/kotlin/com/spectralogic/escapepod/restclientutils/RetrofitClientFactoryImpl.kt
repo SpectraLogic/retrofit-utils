@@ -16,23 +16,23 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.TimeUnit
 
 class RetrofitClientFactoryImpl : RetrofitClientFactory {
-    override fun <T> createXmlRestClient(endpoint: String, service : Class<T>, basePath : String)
-            = innerCreateClient(endpoint, service, basePath, SimpleXmlConverterFactory.create())
+    override fun <T> createXmlRestClient(endpoint: String, service : Class<T>, basePath : String, userAgent: String)
+            = innerCreateClient(endpoint, service, basePath, SimpleXmlConverterFactory.create(), "application/xml", userAgent)
 
-    override fun <T> createJsonRestClient(endpoint: String, service : Class<T>, basePath : String)
-            = innerCreateClient(endpoint, service, basePath, JacksonConverterFactory.create(Mapper.mapper))
+    override fun <T> createJsonRestClient(endpoint: String, service : Class<T>, basePath : String, userAgent: String)
+            = innerCreateClient(endpoint, service, basePath, JacksonConverterFactory.create(Mapper.mapper), "application/json", userAgent)
 
-    private fun <T> innerCreateClient(endpoint: String, service: Class<T>, basePath: String, converterFactory: Converter.Factory): T {
+    private fun <T> innerCreateClient(endpoint: String, service: Class<T>, basePath: String, converterFactory: Converter.Factory, contentType: String, userAgent: String): T {
         return Retrofit.Builder()
             .baseUrl(endpoint + basePath)
-            .client(createOkioClient())
+            .client(createOkioClient(contentType, userAgent))
             .addConverterFactory(converterFactory)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(service)
     }
 
-    private fun createOkioClient() : OkHttpClient {
+    private fun createOkioClient(contentType: String, userAgent: String) : OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(LoggingInterceptor())
 
@@ -44,8 +44,9 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
         builder.addInterceptor { chain ->
 
             val request = chain.request()
-            val newRequest = request.newBuilder().addHeader("Content-Type", "application/xml")
-                    .addHeader("Accepts", "application/xml")
+            val newRequest = request.newBuilder().addHeader("Content-Type", contentType)
+                    .addHeader("Accepts", contentType)
+                    .addHeader("User-Agent", userAgent)
                     .method(request.method(), request.body())
                     .build()
 
