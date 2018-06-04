@@ -16,11 +16,11 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.TimeUnit
 
 class RetrofitClientFactoryImpl : RetrofitClientFactory {
-    override fun <T> createXmlRestClient(endpoint: String, service : Class<T>, basePath : String, userAgent: String)
-            = innerCreateClient(endpoint, service, basePath, SimpleXmlConverterFactory.create(), "application/xml", userAgent)
+    override fun <T> createXmlRestClient(endpoint: String, service: Class<T>, basePath: String, userAgent: String) =
+            innerCreateClient(endpoint, service, basePath, SimpleXmlConverterFactory.create(), "application/xml", userAgent)
 
-    override fun <T> createJsonRestClient(endpoint: String, service : Class<T>, basePath : String, userAgent: String)
-            = innerCreateClient(endpoint, service, basePath, JacksonConverterFactory.create(Mapper.mapper), "application/json", userAgent)
+    override fun <T> createJsonRestClient(endpoint: String, service: Class<T>, basePath: String, userAgent: String) =
+            innerCreateClient(endpoint, service, basePath, JacksonConverterFactory.create(Mapper.mapper), "application/json", userAgent)
 
     private fun <T> innerCreateClient(endpoint: String, service: Class<T>, basePath: String, converterFactory: Converter.Factory, contentType: String, userAgent: String): T {
         return Retrofit.Builder()
@@ -32,14 +32,14 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
             .create(service)
     }
 
-    private fun createOkioClient(contentType: String, userAgent: String) : OkHttpClient {
+    private fun createOkioClient(contentType: String, userAgent: String): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(LoggingInterceptor())
 
-        //val httpLoggingInterceptor = HttpLoggingInterceptor()
-        //httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        // val httpLoggingInterceptor = HttpLoggingInterceptor()
+        // httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        //builder.addInterceptor(httpLoggingInterceptor)
+        // builder.addInterceptor(httpLoggingInterceptor)
 
         builder.addInterceptor { chain ->
 

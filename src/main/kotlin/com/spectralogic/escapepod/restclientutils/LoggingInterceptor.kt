@@ -30,7 +30,6 @@ class LoggingInterceptor : Interceptor {
             LOG.info("Body Info: Content-Length = {}, Content-Type: {}", it.contentLength(), it.contentType())
             it.writeTo(bodyBuffer)
             LOG.info("Body:\n{}", bodyBuffer.readString(Charset.forName("UTF-8")))
-
         }
 
         val response = chain.proceed(request)
@@ -49,5 +48,4 @@ class LoggingInterceptor : Interceptor {
 
         return response
     }
-
 }

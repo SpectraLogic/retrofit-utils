@@ -6,8 +6,7 @@
 
 package com.spectralogic.escapepod.restclientutils
 
-
 interface RetrofitClientFactory {
-    fun <T> createXmlRestClient(endpoint : String, service : Class<T>, basePath: String = "", userAgent: String = "RioBroker") : T
-    fun <T> createJsonRestClient(endpoint : String, service : Class<T>, basePath: String = "", userAgent: String = "RioBroker") : T
+    fun <T> createXmlRestClient(endpoint: String, service: Class<T>, basePath: String = "", userAgent: String = "RioBroker"): T
+    fun <T> createJsonRestClient(endpoint: String, service: Class<T>, basePath: String = "", userAgent: String = "RioBroker"): T
 }
