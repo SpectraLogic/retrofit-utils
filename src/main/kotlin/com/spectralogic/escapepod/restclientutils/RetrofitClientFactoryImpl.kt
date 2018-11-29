@@ -17,12 +17,26 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitClientFactoryImpl : RetrofitClientFactory {
     override fun <T> createXmlRestClient(endpoint: String, service: Class<T>, basePath: String, userAgent: String) =
-            innerCreateClient(endpoint, service, basePath, SimpleXmlConverterFactory.create(), "application/xml", userAgent)
+        innerCreateClient(endpoint, service, basePath, SimpleXmlConverterFactory.create(), "application/xml", userAgent)
 
     override fun <T> createJsonRestClient(endpoint: String, service: Class<T>, basePath: String, userAgent: String) =
-            innerCreateClient(endpoint, service, basePath, JacksonConverterFactory.create(Mapper.mapper), "application/json", userAgent)
+        innerCreateClient(
+            endpoint,
+            service,
+            basePath,
+            JacksonConverterFactory.create(Mapper.mapper),
+            "application/json",
+            userAgent
+        )
 
-    private fun <T> innerCreateClient(endpoint: String, service: Class<T>, basePath: String, converterFactory: Converter.Factory, contentType: String, userAgent: String): T {
+    private fun <T> innerCreateClient(
+        endpoint: String,
+        service: Class<T>,
+        basePath: String,
+        converterFactory: Converter.Factory,
+        contentType: String,
+        userAgent: String
+    ): T {
         return Retrofit.Builder()
             .baseUrl(endpoint + basePath)
             .client(createOkioClient(contentType, userAgent))
@@ -45,10 +59,10 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
 
             val request = chain.request()
             val newRequest = request.newBuilder().addHeader("Content-Type", contentType)
-                    .addHeader("Accepts", contentType)
-                    .addHeader("User-Agent", userAgent)
-                    .method(request.method(), request.body())
-                    .build()
+                .addHeader("Accepts", contentType)
+                .addHeader("User-Agent", userAgent)
+                .method(request.method(), request.body())
+                .build()
 
             chain.proceed(newRequest)
         }

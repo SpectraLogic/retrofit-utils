@@ -22,8 +22,12 @@ class LoggingInterceptor : Interceptor {
         val request = chain.request()
 
         val t1 = System.nanoTime()
-        LOG.info(String.format("Sending request %s %s on %s%n%s",
-                request.method(), request.url(), chain.connection(), request.headers()))
+        LOG.info(
+            String.format(
+                "Sending request %s %s on %s%n%s",
+                request.method(), request.url(), chain.connection(), request.headers()
+            )
+        )
 
         request.body().ifNotNull {
             val bodyBuffer = Buffer()
@@ -35,8 +39,12 @@ class LoggingInterceptor : Interceptor {
         val response = chain.proceed(request)
 
         val t2 = System.nanoTime()
-        LOG.info(String.format("Received %d response for %s %s in %.1fms%n%s",
-                response.code(), request.method(), response.request().url(), (t2 - t1) / 1e6, response.headers()))
+        LOG.info(
+            String.format(
+                "Received %d response for %s %s in %.1fms%n%s",
+                response.code(), request.method(), response.request().url(), (t2 - t1) / 1e6, response.headers()
+            )
+        )
 
         response.body().ifNotNull {
             if (it.contentLength() != 0L) {
