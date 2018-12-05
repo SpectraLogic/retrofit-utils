@@ -20,4 +20,12 @@ interface RetrofitClientFactory {
         basePath: String = "",
         userAgent: String = "RioBroker"
     ): T
+
+    fun <T> createJsonRestClientWithBearer(
+        endpoint: String,
+        service: Class<T>,
+        basePath: String = "",
+        userAgent: String = "RioBroker",
+        bearer: String
+    ): T
 }

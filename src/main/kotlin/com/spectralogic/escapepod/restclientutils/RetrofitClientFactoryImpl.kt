@@ -29,24 +29,36 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
             userAgent
         )
 
+    override fun <T> createJsonRestClientWithBearer(endpoint: String, service: Class<T>, basePath: String, userAgent: String, bearer: String) =
+        innerCreateClient(
+            endpoint,
+            service,
+            basePath,
+            JacksonConverterFactory.create(Mapper.mapper),
+            "application/json",
+            userAgent,
+            bearer
+        )
+
     private fun <T> innerCreateClient(
         endpoint: String,
         service: Class<T>,
         basePath: String,
         converterFactory: Converter.Factory,
         contentType: String,
-        userAgent: String
+        userAgent: String,
+        bearer: String? = null
     ): T {
         return Retrofit.Builder()
             .baseUrl(endpoint + basePath)
-            .client(createOkioClient(contentType, userAgent))
+            .client(createOkioClient(contentType, userAgent, bearer))
             .addConverterFactory(converterFactory)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(service)
     }
 
-    private fun createOkioClient(contentType: String, userAgent: String): OkHttpClient {
+    private fun createOkioClient(contentType: String, userAgent: String, bearer: String?): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(LoggingInterceptor())
 
@@ -61,6 +73,13 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
             val newRequest = request.newBuilder().addHeader("Content-Type", contentType)
                 .addHeader("Accepts", contentType)
                 .addHeader("User-Agent", userAgent)
+                    .let {
+                        if(bearer != null) {
+                            it.addHeader("Authorization", "Bearer $bearer")
+                        } else {
+                            it
+                        }
+                    }
                 .method(request.method(), request.body())
                 .build()
 
