@@ -82,7 +82,7 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
                 .addHeader("Accepts", contentType)
                 .addHeader("User-Agent", userAgent)
                     .let {
-                        if(bearer != null) {
+                        if (bearer != null) {
                             it.addHeader("Authorization", "Bearer $bearer")
                         } else {
                             it
@@ -97,7 +97,7 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
         if (insecure) {
             val (sslSocketFactory, trustManager) = insecureSSLContext()
             builder.sslSocketFactory(sslSocketFactory, trustManager)
-            builder.hostnameVerifier { _, _-> true }
+            builder.hostnameVerifier { _, _ -> true }
         }
         builder.connectTimeout(90L, TimeUnit.SECONDS)
         builder.readTimeout(90L, TimeUnit.SECONDS)
@@ -111,7 +111,6 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
 
         val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
             override fun checkClientTrusted(chain: Array<java.security.cert.X509Certificate>, authType: String) {
-
             }
 
             override fun checkServerTrusted(p0: Array<out X509Certificate>?, p1: String?) {
@@ -124,7 +123,7 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
 
         // Install the all-trusting trust manager
         val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustAllCerts, java.security.SecureRandom());
+        sslContext.init(null, trustAllCerts, java.security.SecureRandom())
 
         // Create an ssl socket factory with our all-trusting manager
         return Pair(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
