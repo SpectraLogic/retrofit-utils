@@ -1,6 +1,6 @@
 /*
  * ****************************************************************************
- *   Copyright 2014-2018 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  * ***************************************************************************
  */
 
