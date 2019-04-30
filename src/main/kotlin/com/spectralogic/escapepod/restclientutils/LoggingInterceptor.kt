@@ -7,11 +7,11 @@
 package com.spectralogic.escapepod.restclientutils
 
 import com.spectralogic.escapepod.util.ifNotNull
+import java.nio.charset.Charset
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.Buffer
 import org.slf4j.LoggerFactory
-import java.nio.charset.Charset
 
 class LoggingInterceptor : Interceptor {
     companion object {

@@ -7,24 +7,30 @@
 package com.spectralogic.escapepod.restclientutils
 
 import com.spectralogic.escapepod.util.json.Mapper
-import okhttp3.OkHttpClient
-import retrofit2.Converter
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.jackson.JacksonConverterFactory
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
+import okhttp3.OkHttpClient
+import retrofit2.Converter
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.jackson.JacksonConverterFactory
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 class RetrofitClientFactoryImpl : RetrofitClientFactory {
     override fun <T> createXmlRestClient(endpoint: String, service: Class<T>, basePath: String, userAgent: String) =
         innerCreateClient(endpoint, service, basePath, SimpleXmlConverterFactory.create(), "application/xml", userAgent)
 
-    override fun <T> createJsonRestClient(endpoint: String, service: Class<T>, basePath: String, userAgent: String, insecure: Boolean) =
+    override fun <T> createJsonRestClient(
+        endpoint: String,
+        service: Class<T>,
+        basePath: String,
+        userAgent: String,
+        insecure: Boolean
+    ) =
         innerCreateClient(
             endpoint,
             service,
@@ -35,7 +41,14 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
             insecure
         )
 
-    override fun <T> createJsonRestClientWithBearer(endpoint: String, service: Class<T>, basePath: String, userAgent: String, insecure: Boolean, bearer: String) =
+    override fun <T> createJsonRestClientWithBearer(
+        endpoint: String,
+        service: Class<T>,
+        basePath: String,
+        userAgent: String,
+        insecure: Boolean,
+        bearer: String
+    ) =
         innerCreateClient(
             endpoint,
             service,
@@ -66,7 +79,12 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
             .create(service)
     }
 
-    private fun createOkioClient(contentType: String, userAgent: String, insecure: Boolean, bearer: String?): OkHttpClient {
+    private fun createOkioClient(
+        contentType: String,
+        userAgent: String,
+        insecure: Boolean,
+        bearer: String?
+    ): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(LoggingInterceptor())
 
@@ -78,9 +96,10 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
         builder.addInterceptor { chain ->
 
             val request = chain.request()
-            val newRequest = request.newBuilder().addHeader("Content-Type", contentType)
-                .addHeader("Accepts", contentType)
-                .addHeader("User-Agent", userAgent)
+            val newRequest =
+                request.newBuilder().addHeader("Content-Type", contentType)
+                    .addHeader("Accepts", contentType)
+                    .addHeader("User-Agent", userAgent)
                     .let {
                         if (bearer != null) {
                             it.addHeader("Authorization", "Bearer $bearer")
@@ -88,8 +107,8 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
                             it
                         }
                     }
-                .method(request.method(), request.body())
-                .build()
+                    .method(request.method(), request.body())
+                    .build()
 
             chain.proceed(newRequest)
         }
@@ -107,7 +126,7 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
     }
 
     private fun insecureSSLContext(): Pair<SSLSocketFactory, X509TrustManager> {
-            // Create a trust manager that does not validate certificate chains
+        // Create a trust manager that does not validate certificate chains
 
         val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
             override fun checkClientTrusted(chain: Array<java.security.cert.X509Certificate>, authType: String) {
