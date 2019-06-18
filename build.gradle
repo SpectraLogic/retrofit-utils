@@ -1,0 +1,68 @@
+/*
+ * ****************************************************************************
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ * ***************************************************************************
+ */
+
+buildscript {
+    ext.kotlin_version = '1.3.31'
+
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
+    }
+}
+
+plugins {
+    id 'org.ajoberstar.grgit' version '3.1.1'
+    id 'org.jlleitschuh.gradle.ktlint' version '8.0.0'
+}
+
+allprojects {
+    group = 'com.spectralogic.retrofitutils'
+    version = '1.0.0-dev'
+
+    repositories {
+        gradlePluginPortal()
+    }
+}
+
+subprojects {
+    apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+
+    ktlint {
+        enableExperimentalRules = true
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        compile group: 'org.slf4j', name: 'slf4j-api', version: "$slf4jVersion"
+        compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlincoroutineVersion"
+        compile "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlincoroutineVersion"
+
+        testCompile group: 'org.slf4j', name: 'slf4j-simple', version: "$slf4jVersion"
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+}

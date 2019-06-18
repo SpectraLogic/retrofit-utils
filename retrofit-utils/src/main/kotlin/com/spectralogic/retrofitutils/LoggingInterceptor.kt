@@ -4,9 +4,8 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.escapepod.restclientutils
+package com.spectralogic.retrofitutils
 
-import com.spectralogic.escapepod.util.ifNotNull
 import java.nio.charset.Charset
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -29,7 +28,7 @@ class LoggingInterceptor : Interceptor {
             )
         )
 
-        request.body().ifNotNull {
+        request.body()?.let {
             val bodyBuffer = Buffer()
             LOG.info("Body Info: Content-Length = {}, Content-Type: {}", it.contentLength(), it.contentType())
             it.writeTo(bodyBuffer)
@@ -46,7 +45,7 @@ class LoggingInterceptor : Interceptor {
             )
         )
 
-        response.body().ifNotNull {
+        response.body()?.let {
             if (it.contentLength() != 0L) {
                 val source = it.source()
                 source.request(Long.MAX_VALUE)

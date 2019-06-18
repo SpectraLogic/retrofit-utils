@@ -4,7 +4,9 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.escapepod.restclientutils
+package com.spectralogic.retrofitutils
+
+import com.fasterxml.jackson.databind.ObjectMapper
 
 interface RetrofitClientFactory {
     fun <T> createXmlRestClient(
@@ -19,7 +21,8 @@ interface RetrofitClientFactory {
         service: Class<T>,
         basePath: String = "",
         userAgent: String = "RioBroker",
-        insecure: Boolean = false
+        insecure: Boolean = false,
+        mapper: ObjectMapper = ObjectMapper()
     ): T
 
     fun <T> createJsonRestClientWithBearer(
@@ -28,6 +31,7 @@ interface RetrofitClientFactory {
         basePath: String = "",
         userAgent: String = "RioBroker",
         insecure: Boolean = false,
-        bearer: String
+        bearer: String,
+        mapper: ObjectMapper = ObjectMapper()
     ): T
 }

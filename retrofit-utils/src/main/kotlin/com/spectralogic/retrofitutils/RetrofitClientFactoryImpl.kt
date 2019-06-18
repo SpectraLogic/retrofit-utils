@@ -4,9 +4,9 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.escapepod.restclientutils
+package com.spectralogic.retrofitutils
 
-import com.spectralogic.escapepod.util.json.Mapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
@@ -29,13 +29,14 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
         service: Class<T>,
         basePath: String,
         userAgent: String,
-        insecure: Boolean
+        insecure: Boolean,
+        mapper: ObjectMapper
     ) =
         innerCreateClient(
             endpoint,
             service,
             basePath,
-            JacksonConverterFactory.create(Mapper.mapper),
+            JacksonConverterFactory.create(mapper),
             "application/json",
             userAgent,
             insecure
@@ -47,13 +48,14 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
         basePath: String,
         userAgent: String,
         insecure: Boolean,
-        bearer: String
+        bearer: String,
+        mapper: ObjectMapper
     ) =
         innerCreateClient(
             endpoint,
             service,
             basePath,
-            JacksonConverterFactory.create(Mapper.mapper),
+            JacksonConverterFactory.create(mapper),
             "application/json",
             userAgent,
             insecure,
