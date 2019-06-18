@@ -3,6 +3,7 @@
  *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  * ***************************************************************************
  */
+apply from: "$rootDir/gradle/scripts/publish.gradle"
 
 dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"

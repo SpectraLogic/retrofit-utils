@@ -12,11 +12,14 @@ buildscript {
             url "https://plugins.gradle.org/m2/"
         }
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
     }
 }
 
@@ -35,6 +38,7 @@ allprojects {
 }
 
 subprojects {
+    apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'com.github.ben-manes.versions'
     apply plugin: 'java'
     apply plugin: 'kotlin'
@@ -54,15 +58,21 @@ subprojects {
 
     dependencies {
         compile group: 'org.slf4j', name: 'slf4j-api', version: "$slf4jVersion"
-        compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlincoroutineVersion"
-        compile "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlincoroutineVersion"
-
         testCompile group: 'org.slf4j', name: 'slf4j-simple', version: "$slf4jVersion"
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
             jvmTarget = "1.8"
+        }
+    }
+
+    shadowJar {
+        minimize()
+        relocate 'retrofit2', 'shadow.retrofit2'
+        relocate 'okhttp', 'shadow.okhttp'
+        dependencies {
+            exclude(dependency('org.slf4j:slf4j-api:*'))
         }
     }
 }
