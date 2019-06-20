@@ -16,7 +16,6 @@ import javax.net.ssl.X509TrustManager
 import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
@@ -76,7 +75,6 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
             .baseUrl(endpoint + basePath)
             .client(createOkioClient(contentType, userAgent, insecure, bearer))
             .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(service)
     }
@@ -89,12 +87,6 @@ class RetrofitClientFactoryImpl : RetrofitClientFactory {
     ): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(LoggingInterceptor())
-
-        // val httpLoggingInterceptor = HttpLoggingInterceptor()
-        // httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-
-        // builder.addInterceptor(httpLoggingInterceptor)
-
         builder.addInterceptor { chain ->
 
             val request = chain.request()
