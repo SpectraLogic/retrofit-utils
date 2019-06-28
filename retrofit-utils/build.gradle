@@ -8,6 +8,7 @@ apply from: "$rootDir/gradle/scripts/publish.gradle"
 dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile group: 'com.squareup.retrofit2', name: 'converter-simplexml', version: "$retrofitVersion"
-    compile group: 'com.squareup.retrofit2', name: 'adapter-rxjava2', version: "$retrofitVersion"
     compile "com.squareup.retrofit2:converter-jackson:$retrofitVersion"
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.9.9'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.3.31'
 }
